@@ -13,6 +13,7 @@ model Script {
   language  String   @default("ar")
   createdAt DateTime @default(now())
   scenes    Scene[]
+  characters Character[]
 }
 
 model Scene {
@@ -21,11 +22,28 @@ model Scene {
   heading    String
   location   String?
   timeOfDay  String?
-  characters String[]
   text       String
   beats      Beat[]
+  characters SceneCharacter[]
   scriptId   String
   script     Script   @relation(fields: [scriptId], references: [id])
+}
+
+model Character {
+  id        String   @id @default(cuid())
+  name      String
+  scriptId  String
+  script    Script   @relation(fields: [scriptId], references: [id])
+  scenes    SceneCharacter[]
+}
+
+model SceneCharacter {
+  id       String @id @default(cuid())
+  name     String
+  sceneId  String
+  characterId String
+  scene    Scene     @relation(fields: [sceneId], references: [id])
+  character Character @relation(fields: [characterId], references: [id])
 }
 
 model Beat {
