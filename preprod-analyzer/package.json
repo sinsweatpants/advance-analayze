@@ -1,12 +1,51 @@
 {
   "name": "preprod-analyzer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web application pipeline for pre-production screenplay analysis (Arabic/RTL ready).",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:api": "pnpm --filter api exec tsx src/server.ts",
+    "dev:worker": "pnpm --filter worker exec tsx src/worker.ts",
+    "e2e": "pnpm tsx scripts/run-pipeline.ts --config configs/defaults.ts --input data/input/sample.fdx --export-pdf true --export-csv true",
+    "db:generate": "prisma generate --schema ./prisma/schema.prisma",
+    "db:push": "prisma db push --schema ./prisma/schema.prisma",
+    "db:migrate": "prisma migrate dev --name init --schema ./prisma/schema.prisma",
+    "lint": "eslint .",
+    "typecheck": "tsc -b",
+    "build": "tsc -b"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "@xenova/transformers": "^2.17.0",
+    "bullmq": "^5.7.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.0",
+    "he": "^1.2.0",
+    "ioredis": "^5.4.1",
+    "lodash": "^4.17.21",
+    "nanoid": "^5.0.7",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.2.2",
+    "vega": "^5.30.0",
+    "vega-lite": "^5.19.0",
+    "vega-lite-api": "^5.3.0",
+    "puppeteer": "^23.6.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "prisma": "^5.20.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.0",
+    "eslint": "^9.29.0",
+    "prettier": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
 }
