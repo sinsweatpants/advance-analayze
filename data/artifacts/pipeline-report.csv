@@ -1,0 +1,3 @@
+sceneId,wordCount,isExt,isNight,locationSwitched,overallSentiment,confidence,mlSentimentLabel,mlSentimentScore,ruleSentimentLabel,ruleSentimentScore,agreementScore
+scene_1,29,true,false,false,negative,0.6307339996099472,negative,0.7812582850456238,neutral,0.5,0.3
+scene_2,25,false,true,true,negative,0.5744304190079371,negative,0.6847378611564636,neutral,0.5,0.3

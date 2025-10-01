@@ -4,7 +4,7 @@
     {
       "sceneId": "scene_1",
       "wordCount": 29,
-      "characterCount": 0,
+      "characterCount": 2,
       "isExt": true,
       "isNight": false,
       "locationSwitched": false
@@ -12,7 +12,7 @@
     {
       "sceneId": "scene_2",
       "wordCount": 25,
-      "characterCount": 0,
+      "characterCount": 2,
       "isExt": false,
       "isNight": true,
       "locationSwitched": true
