@@ -14,7 +14,7 @@ export interface Scene {
   heading: string;
   location: string | null;
   timeOfDay: string | null;
-  characters: string[];
+  characters: string; // Stored as a JSON string
   text: string;
   beats: Beat[];
 }
@@ -74,7 +74,7 @@ export function segmentScript(ingestedScript: IngestedScript): SegmentedScript {
 
     // Simple line-based beat segmentation
     const beatTexts = content.split('\n').filter(line => line.trim() !== '');
-    const beats: Beat[] = beatTexts.map((line, index) => ({
+    const beats: Beat[] = beatTexts.map((line: string, index: number) => ({
       id: `beat_${sceneNumber}-${index + 1}`,
       index: index + 1,
       text: line.trim(),
@@ -86,7 +86,7 @@ export function segmentScript(ingestedScript: IngestedScript): SegmentedScript {
       heading,
       location,
       timeOfDay,
-      characters: [], // To be implemented later
+        characters: '[]', // To be implemented later, stored as a JSON string
       text: content,
       beats,
     };

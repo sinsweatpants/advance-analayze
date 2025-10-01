@@ -8,7 +8,13 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@preprod/*": [
+        "packages/*/src"
+      ]
+    }
   },
   "include": [
     "apps/*/src",

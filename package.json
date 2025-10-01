@@ -12,7 +12,8 @@
     "db:migrate": "prisma migrate dev --name init --schema ./prisma/schema.prisma",
     "lint": "eslint .",
     "typecheck": "tsc -b",
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "postinstall": "pnpm rebuild sharp || true"
   },
   "workspaces": [
     "apps/*",

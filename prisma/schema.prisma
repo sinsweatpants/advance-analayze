@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -21,7 +21,7 @@ model Scene {
   heading    String
   location   String?
   timeOfDay  String?
-  characters String[]
+  characters String // Represents a comma-separated list or JSON string
   text       String
   beats      Beat[]
   scriptId   String

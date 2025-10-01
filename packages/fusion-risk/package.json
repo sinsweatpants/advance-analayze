@@ -1,0 +1,13 @@
+{
+  "name": "@preprod/fusion-risk",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "@preprod/features-stylometry": "workspace:*",
+    "@preprod/sentiment-hybrid": "workspace:*",
+    "@preprod/topics-modeling": "workspace:*"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "scriptId": "sample_script",
+  "sceneSentiments": [
+    {
+      "overallSentiment": "negative",
+      "confidence": 0.6307339996099472,
+      "mlSentiment": {
+        "label": "negative",
+        "score": 0.7812582850456238
+      },
+      "ruleSentiment": {
+        "score": 0.5,
+        "label": "neutral"
+      },
+      "agreementScore": 0.3
+    },
+    {
+      "overallSentiment": "negative",
+      "confidence": 0.5744304190079371,
+      "mlSentiment": {
+        "label": "negative",
+        "score": 0.6847378611564636
+      },
+      "ruleSentiment": {
+        "score": 0.5,
+        "label": "neutral"
+      },
+      "agreementScore": 0.3
+    }
+  ]
+}
