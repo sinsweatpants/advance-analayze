@@ -8,12 +8,12 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "outDir": "dist"
   },
-  "include": ["apps", "packages", "scripts"],
+  "include": [
+    "apps/*/src",
+    "packages/*/src",
+    "scripts/**/*.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
