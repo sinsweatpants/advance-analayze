@@ -7,6 +7,14 @@ env.allowLocalModels = false;
 env.backends.onnx.wasm.numThreads = 1;
 process.env.TRANSFORMERS_CACHE = '/tmp/transformers-cache';
 
+// Define the possible output types from the transformers library
+interface TextClassificationSingle {
+  label: string;
+  score: number;
+}
+
+type TextClassificationOutput = TextClassificationSingle[];
+
 export interface SentimentResult {
   label: string;
   score: number;
@@ -94,11 +102,30 @@ export class SentimentHybridProcessor {
 
     if (this.mlClassifier) {
       try {
-        const result = await this.mlClassifier(text);
-        mlSentiment = {
-          label: result[0].label.toLowerCase(),
-          score: result[0].score
-        };
+        const result: TextClassificationOutput | TextClassificationSingle = await this.mlClassifier(text);
+        
+        // Handle both possible return types from the transformers library
+        let classification: TextClassificationSingle;
+        if (Array.isArray(result)) {
+          classification = result[0];
+        } else {
+          classification = result as TextClassificationSingle;
+        }
+        
+        // Type guard to ensure the label property exists
+        if ("label" in classification) {
+          mlSentiment = {
+            label: classification.label.toLowerCase(),
+            score: classification.score
+          };
+        } else {
+          // Fallback if the result format is not as expected
+          console.warn('Unexpected result format from ML classifier:', result);
+          mlSentiment = {
+            label: ruleSentiment.label,
+            score: ruleSentiment.score
+          };
+        }
       } catch (error) {
         console.warn('ML classification failed, using rule-based only:', error);
         mlSentiment = {
