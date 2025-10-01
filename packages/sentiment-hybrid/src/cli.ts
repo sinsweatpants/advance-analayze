@@ -28,13 +28,8 @@ program
       const outputDir = path.dirname(options.output);
       await fs.mkdir(outputDir, { recursive: true });
 
-      // We'll store the results in a format that matches the other stages
-      const outputData = {
-          scriptId: segmentedScript.scriptId,
-          sceneSentiments: results
-      };
-
-      await fs.writeFile(options.output, JSON.stringify(outputData, null, 2));
+      // The `results` object is already in the correct format.
+      await fs.writeFile(options.output, JSON.stringify(results, null, 2));
 
       console.log(`Successfully analyzed sentiment and saved to ${options.output}`);
     } catch (error) {

@@ -72,6 +72,31 @@ export function segmentScript(ingestedScript: IngestedScript): SegmentedScript {
 
     const { location, timeOfDay } = parseSceneHeading(heading);
 
+    const lines = content.split('\n').map(l => l.trim()).filter(l => l);
+
+    // Character extraction logic
+    const characterNames = new Set<string>();
+    for (let j = 0; j < lines.length; j++) {
+        const currentLine = lines[j];
+        const nextLine = lines[j + 1];
+
+        // A line is a potential character name if it's short, not a parenthetical,
+        // and doesn't end with sentence-ending punctuation.
+        const isPotentialCandidate =
+            currentLine.split(/\s+/).length <= 3 && // 1-3 words
+            !currentLine.startsWith('(') &&
+            !/[.?!,;:]$/.test(currentLine);
+
+        if (isPotentialCandidate && nextLine) {
+            // If the next line looks like dialogue or a parenthetical, we assume the current line is a character name.
+            // This is a heuristic that works for many simple script formats.
+            const isNextLineDialogueOrParen = nextLine.startsWith('(') || nextLine.length > 15;
+            if (isNextLineDialogueOrParen) {
+                characterNames.add(currentLine.replace(/[^ \p{L}\p{N}_]/gu, '')); // Sanitize name
+            }
+        }
+    }
+
     // Simple line-based beat segmentation
     const beatTexts = content.split('\n').filter(line => line.trim() !== '');
     const beats: Beat[] = beatTexts.map((line: string, index: number) => ({
@@ -86,7 +111,7 @@ export function segmentScript(ingestedScript: IngestedScript): SegmentedScript {
       heading,
       location,
       timeOfDay,
-        characters: '[]', // To be implemented later, stored as a JSON string
+      characters: JSON.stringify(Array.from(characterNames)),
       text: content,
       beats,
     };

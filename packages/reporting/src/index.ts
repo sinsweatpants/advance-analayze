@@ -46,7 +46,7 @@ export async function generateHtmlReport(fusionOutput: FusionOutput, outputPath:
   }));
 
   // Vega-Lite spec for sentiment over scenes
-  const sentimentChartSpec = {
+  const sentimentChartSpec: vl.TopLevelSpec = {
     $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
     description: 'Overall Sentiment per Scene',
     data: { values: chartData },

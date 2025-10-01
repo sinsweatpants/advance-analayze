@@ -1,13 +1,16 @@
 import { SegmentedScript, Scene } from '@preprod/segment-beats';
 
-// Interface for the features of a single scene
+// Extended feature set
 export interface SceneFeatures {
   sceneId: string;
+  // Production Load Features
   wordCount: number;
   characterCount: number;
   isExt: boolean;
   isNight: boolean;
   locationSwitched: boolean; // Did location change from previous scene?
+  // Stylometric Features
+  avgSentenceLength: number;
 }
 
 // Interface for the output of this stage
@@ -23,6 +26,20 @@ export interface FeatureExtractionOutput {
  */
 function countWords(text: string): number {
   return text.split(/\s+/).filter(word => word.length > 0).length;
+}
+
+/**
+ * Calculates the average sentence length for a given text.
+ * @param text - The text to analyze.
+ * @returns The average number of words per sentence.
+ */
+function calculateAvgSentenceLength(text: string): number {
+  // Split text into sentences using common punctuation. A simple but effective heuristic.
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+  if (sentences.length === 0 || text.trim() === '') return 0;
+
+  const totalWords = countWords(text);
+  return totalWords / sentences.length;
 }
 
 /**
@@ -42,13 +59,29 @@ export function extractFeatures(segmentedScript: SegmentedScript): FeatureExtrac
     const locationSwitched = previousLocation !== null && scene.location !== previousLocation;
     previousLocation = scene.location;
 
+    // Correctly parse character count from JSON string
+    let characterCount = 0;
+    try {
+      const chars = JSON.parse(scene.characters);
+      if (Array.isArray(chars)) {
+        characterCount = chars.length;
+      }
+    } catch (e) {
+      console.warn(`Could not parse characters for scene ${scene.id}: ${scene.characters}`);
+      characterCount = 0; // Fallback
+    }
+
+    // Calculate new stylometric features
+    const avgSentenceLength = calculateAvgSentenceLength(scene.text);
+
     const features: SceneFeatures = {
       sceneId: scene.id,
       wordCount,
-      characterCount: scene.characters.length, // This is 0 for now
+      characterCount,
       isExt,
       isNight,
       locationSwitched,
+      avgSentenceLength,
     };
 
     allSceneFeatures.push(features);
