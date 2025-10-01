@@ -36,6 +36,11 @@ export interface HybridSentimentResult {
   agreementScore: number;
 }
 
+export interface SentimentAnalysisOutput {
+  scriptId: string;
+  sceneSentiments: HybridSentimentResult[];
+}
+
 export class SentimentHybridProcessor {
   private mlClassifier: any = null;
 
@@ -58,8 +63,8 @@ export class SentimentHybridProcessor {
         'sentiment-analysis',
         'Xenova/distilbert-base-uncased-finetuned-sst-2-english',
         {
-          device: 'cpu',
-          dtype: 'fp32'
+          // device: 'cpu', // 'device' is not a valid option in transformers.js
+          // dtype: 'fp32' // dtype is also not a valid option here
         }
       );
       console.log('Model initialized successfully');
@@ -178,12 +183,15 @@ export class SentimentHybridProcessor {
     }
   }
 
-  async processScript(segmentedScript: SegmentedScript): Promise<HybridSentimentResult[]> {
+  async processScript(segmentedScript: SegmentedScript): Promise<SentimentAnalysisOutput> {
     const results: HybridSentimentResult[] = [];
     for (const scene of segmentedScript.scenes) {
       const result = await this.analyzeSentiment(scene.text);
       results.push(result);
     }
-    return results;
+    return {
+      scriptId: segmentedScript.scriptId,
+      sceneSentiments: results,
+    };
   }
 }

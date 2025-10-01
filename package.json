@@ -6,7 +6,7 @@
   "scripts": {
     "dev:api": "pnpm --filter api exec tsx src/server.ts",
     "dev:worker": "pnpm --filter worker exec tsx src/worker.ts",
-    "e2e": "pnpm tsx scripts/run-pipeline.ts --config configs/defaults.ts --input data/input/sample.fdx --export-pdf true --export-csv true",
+    "e2e": "pnpm tsx scripts/run-pipeline.ts --config configs/defaults.ts --input data/input/sample.txt --export-pdf --export-csv",
     "db:generate": "prisma generate --schema ./prisma/schema.prisma",
     "db:push": "prisma db push --schema ./prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --name init --schema ./prisma/schema.prisma",

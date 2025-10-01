@@ -45,9 +45,12 @@ export function fuseData(
       continue;
     }
 
+    // Destructure to exclude `characterCount` which is not part of FusedSceneData,
+    // while keeping all other properties from sceneFeature, including sceneId.
+    const { characterCount, ...validFeatures } = sceneFeature;
+
     fusedScenes.push({
-      sceneId,
-      ...sceneFeature,
+      ...validFeatures,
       ...sceneSentiment,
     });
   }
