@@ -1,3 +1,5 @@
+#!/usr/bin/env tsx
+
 import { Command } from 'commander';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -10,7 +12,7 @@ import { extractFeatures, FeatureExtractionOutput } from '@preprod/features-styl
 import { SentimentHybridProcessor, SentimentAnalysisOutput } from '@preprod/sentiment-hybrid';
 import { modelTopics, TopicModelingOutput } from '@preprod/topics-modeling';
 import { fuseData, FusionOutput } from '@preprod/fusion-risk';
-import { generatePdfReport, generateCsvReport } from '@preprod/reporting';
+import { generatePdfReport, generateCsvReport, generateJsonReport, generateHtmlReport } from '@preprod/reporting';
 
 async function main() {
   const program = new Command();
@@ -21,10 +23,12 @@ async function main() {
     .requiredOption('-i, --input <path>', 'Path to the input script file (e.g., .fdx, .txt)')
     .option('--export-pdf', 'Export the final report as a PDF')
     .option('--export-csv', 'Export the final report as a CSV')
+    .option('--export-json', 'Export detailed pipeline outputs as JSON')
+    .option('--export-html', 'Export a simple HTML report with charts')
     .parse(process.argv);
 
   const options = program.opts();
-  const { input: inputPath, exportPdf, exportCsv } = options;
+  const { input: inputPath, exportPdf, exportCsv, exportJson, exportHtml } = options;
 
   console.log('🚀 Starting analysis pipeline...');
   console.log(`Input file: ${inputPath}`);
@@ -63,25 +67,48 @@ async function main() {
   const fusionOutput: FusionOutput = fuseData(featureOutput, topicOutput, sentimentOutput);
   console.log('✅ Data fused successfully.');
 
+  // Collect all pipeline outputs for JSON report
+  const pipelineOutputs = {
+    ingestedScript,
+    segmentedScript,
+    featureOutput,
+    sentimentOutput,
+    topicOutput,
+    fusionOutput,
+  };
+
   // 5. Reporting
-  if (exportPdf || exportCsv) {
-    const outputDir = path.join(process.cwd(), 'data', 'output');
-    await fs.mkdir(outputDir, { recursive: true });
-    const baseName = path.basename(inputPath, path.extname(inputPath));
+  const outputDir = path.join(process.cwd(), 'data', 'artifacts'); // Changed output directory to artifacts
+  await fs.mkdir(outputDir, { recursive: true });
+  const baseName = path.basename(inputPath, path.extname(inputPath));
+  const reportBaseName = 'pipeline-report'; // Fixed report name
 
-    if (exportPdf) {
-      console.log('📄 Generating PDF report...');
-      const pdfPath = path.join(outputDir, `${baseName}-report.pdf`);
-      await generatePdfReport(fusionOutput, pdfPath);
-      console.log(`✅ PDF report saved to: ${pdfPath}`);
-    }
+  if (exportJson) {
+    console.log('📄 Generating JSON report...');
+    const jsonPath = path.join(outputDir, `${reportBaseName}.json`);
+    await generateJsonReport(pipelineOutputs, jsonPath);
+    console.log(`✅ JSON report saved to: ${jsonPath}`);
+  }
 
-    if (exportCsv) {
-      console.log('📊 Generating CSV report...');
-      const csvPath = path.join(outputDir, `${baseName}-report.csv`);
-      await generateCsvReport(fusionOutput, csvPath);
-      console.log(`✅ CSV report saved to: ${csvPath}`);
-    }
+  if (exportHtml) {
+    console.log('📄 Generating HTML report...');
+    const htmlPath = path.join(outputDir, `${reportBaseName}.html`);
+    await generateHtmlReport(fusionOutput, htmlPath);
+    console.log(`✅ HTML report saved to: ${htmlPath}`);
+  }
+
+  if (exportPdf) {
+    console.log('📄 Generating PDF report...');
+    const pdfPath = path.join(outputDir, `${reportBaseName}.pdf`);
+    await generatePdfReport(fusionOutput, pdfPath);
+    console.log(`✅ PDF report saved to: ${pdfPath}`);
+  }
+
+  if (exportCsv) {
+    console.log('📊 Generating CSV report...');
+    const csvPath = path.join(outputDir, `${reportBaseName}.csv`);
+    await generateCsvReport(fusionOutput, csvPath);
+    console.log(`✅ CSV report saved to: ${csvPath}`);
   }
 
   console.log('🎉 Pipeline finished successfully!');
