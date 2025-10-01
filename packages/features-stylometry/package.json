@@ -1,0 +1,13 @@
+{
+  "name": "@preprod/features-stylometry",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "@preprod/segment-beats": "workspace:*"
+  }
+}

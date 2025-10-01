@@ -1,0 +1,14 @@
+{
+  "scriptId": "sample_script",
+  "model": "Xenova/paraphrase-multilingual-MiniLM-L12-v2",
+  "sceneTopics": [
+    {
+      "sceneId": "scene_1",
+      "embedding": "[384 floats]"
+    },
+    {
+      "sceneId": "scene_2",
+      "embedding": "[384 floats]"
+    }
+  ]
+}

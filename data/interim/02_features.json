@@ -1,0 +1,21 @@
+{
+  "scriptId": "sample_script",
+  "sceneFeatures": [
+    {
+      "sceneId": "scene_1",
+      "wordCount": 29,
+      "characterCount": 0,
+      "isExt": true,
+      "isNight": false,
+      "locationSwitched": false
+    },
+    {
+      "sceneId": "scene_2",
+      "wordCount": 25,
+      "characterCount": 0,
+      "isExt": false,
+      "isNight": true,
+      "locationSwitched": true
+    }
+  ]
+}

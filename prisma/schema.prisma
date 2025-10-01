@@ -1,6 +1,6 @@
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -13,7 +13,6 @@ model Script {
   language  String   @default("ar")
   createdAt DateTime @default(now())
   scenes    Scene[]
-  characters Character[]
 }
 
 model Scene {
@@ -22,28 +21,11 @@ model Scene {
   heading    String
   location   String?
   timeOfDay  String?
+  characters String[]
   text       String
   beats      Beat[]
-  characters SceneCharacter[]
   scriptId   String
   script     Script   @relation(fields: [scriptId], references: [id])
-}
-
-model Character {
-  id        String   @id @default(cuid())
-  name      String
-  scriptId  String
-  script    Script   @relation(fields: [scriptId], references: [id])
-  scenes    SceneCharacter[]
-}
-
-model SceneCharacter {
-  id       String @id @default(cuid())
-  name     String
-  sceneId  String
-  characterId String
-  scene    Scene     @relation(fields: [sceneId], references: [id])
-  character Character @relation(fields: [characterId], references: [id])
 }
 
 model Beat {
@@ -51,5 +33,5 @@ model Beat {
   index    Int
   text     String
   sceneId  String
-  scene    Scene     @relation(fields: [sceneId], references: [id])
+  scene    Scene    @relation(fields: [sceneId], references: [id])
 }
